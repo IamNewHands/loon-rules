@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:14:26
-# RuleCount：4
-payload:
-  - DOMAIN-SUFFIX,kingsmith.com.cn
-  - DOMAIN-SUFFIX,kingsmith.cn
-  - DOMAIN-SUFFIX,walkingpad.cn
-  - DOMAIN-SUFFIX,walkingpad.com

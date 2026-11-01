@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:18:23
-# RuleCount：4
-payload:
-  - DOMAIN-SUFFIX,weibo.cn
-  - DOMAIN-SUFFIX,weibo.com
-  - DOMAIN-SUFFIX,weibocdn.com
-  - DOMAIN-KEYWORD,weibo

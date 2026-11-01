@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:14:20
-# RuleCount：3
-payload:
-  - DOMAIN,beta.apple.com
-  - DOMAIN,testflight.apple.com
-  - DOMAIN-KEYWORD,testflight

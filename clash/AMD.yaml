@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:15:58
-# RuleCount：4
-payload:
-  - DOMAIN-SUFFIX,amd.com.cn
-  - DOMAIN-SUFFIX,amd.com
-  - DOMAIN-SUFFIX,amdfanstore.com
-  - DOMAIN-SUFFIX,radeon.com

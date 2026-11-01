@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:14:29
-# RuleCount：4
-payload:
-  - DOMAIN-SUFFIX,collabora.com
-  - DOMAIN-SUFFIX,collaboraoffice.com
-  - DOMAIN-SUFFIX,collabora.org
-  - DOMAIN-SUFFIX,collabora.co.uk

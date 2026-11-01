@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:16:05
-# RuleCount：4
-payload:
-  - DOMAIN-SUFFIX,sublimehq.com
-  - DOMAIN-SUFFIX,sublimemerge.com
-  - DOMAIN-SUFFIX,sublimetext.com
-  - DOMAIN-SUFFIX,packagecontrol.io

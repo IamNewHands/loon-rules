@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:18:42
-# RuleCount：3
-payload:
-  - DOMAIN-SUFFIX,dynu.com
-  - DOMAIN-SUFFIX,dynu.net
-  - DOMAIN-SUFFIX,freeddns.org

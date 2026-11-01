@@ -1,7 +1,0 @@
-# UpdateTime：2026-10-29 03:18:22
-# RuleCount：4
-payload:
-  - DOMAIN,hls-hichannel.cdn.hinet.net
-  - DOMAIN-SUFFIX,hamivideo.hinet.net
-  - DOMAIN-SUFFIX,ott.hinet.net
-  - DOMAIN-KEYWORD,hamivideo.cdn.hinet.net

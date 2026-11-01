@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:14:23
-# RuleCount：3
-payload:
-  - DOMAIN-SUFFIX,maoyuncloud.cn
-  - DOMAIN-SUFFIX,maoyun.com
-  - DOMAIN-SUFFIX,maoyuncloud.com

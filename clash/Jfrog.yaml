@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:14:43
-# RuleCount：3
-payload:
-  - DOMAIN-SUFFIX,bintray.com
-  - DOMAIN-SUFFIX,jfrog.com
-  - DOMAIN-SUFFIX,jfrog.org

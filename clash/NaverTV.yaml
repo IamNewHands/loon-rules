@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:14:24
-# RuleCount：3
-payload:
-  - DOMAIN-SUFFIX,naver.com
-  - DOMAIN-SUFFIX,smartmediarep.com
-  - USER-AGENT,Naver%20TV*

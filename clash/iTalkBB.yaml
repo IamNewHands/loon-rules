@@ -1,6 +1,0 @@
-# UpdateTime：2026-10-29 03:14:21
-# RuleCount：3
-payload:
-  - DOMAIN-SUFFIX,api.tv.colnv.com
-  - DOMAIN-SUFFIX,italkbb.com
-  - DOMAIN-SUFFIX,italkbbtv.com
