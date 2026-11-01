@@ -1,0 +1,5 @@
+# UpdateTime：2026-10-29 03:18:18
+# RuleCount：3
+DOMAIN-SUFFIX, deezer.com
+DOMAIN-SUFFIX, dzcdn.net
+USER-AGENT, Deezer*
