@@ -1,0 +1,72 @@
+name: sync upstream rules
+
+on:
+  schedule:
+    # 每天 02:00 UTC = 10:00 北京时间
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '触发原因（写入提交信息）'
+        required: false
+        default: 'manual'
+
+concurrency:
+  group: sync-rules
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/sync.py
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "::notice::上游无变化，不提交"
+            exit 0
+          fi
+          LOON=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(d['loon']['total'])")
+          BM7=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(d['bm7']['total'])")
+          PATCH=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(','.join(d['patches']) or 'none')")
+          git add -A
+          git commit -m "sync: upstream refresh (loon ${LOON}, bm7 ${BM7}, patches ${PATCH})"
+          git push origin HEAD:main
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f sync-status.json ]; then
+            python3 - <<'EOF' >> $GITHUB_STEP_SUMMARY
+          import json
+          d = json.load(open('sync-status.json'))
+          print('| 数据集 | 文件数 | 失败 |')
+          print('|---|---|---|')
+          print('| loon (kelee) | %d | %d |' % (d['loon']['total'], d['loon']['fail']))
+          print('| bm7 (blackmatrix7) | %d | %d |' % (d['bm7']['total'], d['bm7']['fail']))
+          print('')
+          print('补丁：`%s`  ·  同步于 %s' % (', '.join(d['patches']) or 'none', d['synced_at']))
+          EOF
+          else
+            echo "sync-status.json 未生成，本次同步失败" >> $GITHUB_STEP_SUMMARY
+          fi

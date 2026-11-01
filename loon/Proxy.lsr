@@ -7503,13 +7503,13 @@ IP-CIDR6, 2001:b28:f23d::/48, no-resolve
 IP-CIDR6, 2001:b28:f23f::/48, no-resolve
 IP-CIDR6, 2a0a:f280::/32, no-resolve
 
-# --- 本地补丁 2026-11-01：上游 blackmatrix7 新增港美股券商域名（kelee 未同步）---
+# --- 本地补丁：上游 blackmatrix7 新增港美股券商域名（kelee 未同步）---
 DOMAIN-SUFFIX, futu.cn
 DOMAIN-SUFFIX, futubull.cn
 DOMAIN-SUFFIX, longportapp.cn
+DOMAIN-SUFFIX, openapi.longbridge.cn
 DOMAIN-SUFFIX, openapi-quote.longbridge.cn
 DOMAIN-SUFFIX, openapi-trade.longbridge.cn
-DOMAIN-SUFFIX, openapi.longbridge.cn
 DOMAIN-SUFFIX, schwab.com.cn
 DOMAIN-SUFFIX, tigerbbs.cn
 DOMAIN-SUFFIX, zhijianfengyi.cn

@@ -1,6 +1,5 @@
 # TikTok by 可莉
 # 2026-05-25 02:35:22
-# --- 本地补丁 2026-11-01：移除 3 条误入的非 TikTok 域名 ---
 DOMAIN, engagements.appsflyer.com
 DOMAIN, lf16-campaign.ttlstatic.com
 DOMAIN, lf16-csp.oecstatic.com
