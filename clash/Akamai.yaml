@@ -1,0 +1,9 @@
+# UpdateTime：2026-10-29 03:14:27
+# RuleCount：6
+payload:
+  - DOMAIN-SUFFIX,akamai.com
+  - DOMAIN-SUFFIX,akamai.net
+  - DOMAIN-SUFFIX,akamaiedge.net
+  - DOMAIN-SUFFIX,akamaihd.net
+  - DOMAIN-SUFFIX,akamaistream.net
+  - DOMAIN-SUFFIX,akamaized.net

@@ -1,0 +1,6 @@
+# UpdateTime：2026-10-29 03:14:20
+# RuleCount：3
+payload:
+  - DOMAIN-SUFFIX,disqus.com
+  - DOMAIN-SUFFIX,disquscdn.com
+  - DOMAIN-SUFFIX,disqusservice.com

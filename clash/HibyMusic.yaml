@@ -1,0 +1,6 @@
+# UpdateTime：2026-10-29 03:18:08
+# RuleCount：3
+payload:
+  - DOMAIN-SUFFIX,hiby.cd
+  - DOMAIN-SUFFIX,hiby.com
+  - DOMAIN-SUFFIX,hibymusic.com

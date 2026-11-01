@@ -1,0 +1,5 @@
+# UpdateTime：2026-10-29 03:14:26
+# RuleCount：2
+payload:
+  - DOMAIN-SUFFIX,overcast.fm
+  - USER-AGENT,Overcast*

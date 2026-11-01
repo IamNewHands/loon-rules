@@ -1,0 +1,7 @@
+# UpdateTime：2026-10-29 03:14:21
+# RuleCount：4
+payload:
+  - DOMAIN-SUFFIX,boxofficemojo.com
+  - DOMAIN-SUFFIX,imdb.com
+  - DOMAIN-SUFFIX,media-imdb.com
+  - DOMAIN-SUFFIX,imdb.to

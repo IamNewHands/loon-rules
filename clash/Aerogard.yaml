@@ -1,0 +1,6 @@
+# UpdateTime：2026-10-29 03:18:40
+# RuleCount：3
+payload:
+  - DOMAIN-SUFFIX,aerogard.com.au
+  - DOMAIN-SUFFIX,aerogard.com.cn
+  - DOMAIN-SUFFIX,aerogardcn.com

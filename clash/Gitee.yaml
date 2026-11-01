@@ -1,0 +1,5 @@
+# UpdateTime：2026-10-29 03:18:00
+# RuleCount：2
+payload:
+  - DOMAIN-SUFFIX,gitee.com
+  - DOMAIN-SUFFIX,gitee.io
