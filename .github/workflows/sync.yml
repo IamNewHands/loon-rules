@@ -36,6 +36,10 @@ jobs:
       - name: Sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 可选：kelee 的 Cloudflare 对 GitHub 出口 IP 返回 403。配置一个反代前缀
+          # （如 https://某 Worker 域名）后，所有 kelee 请求会改为 <前缀>/<原始URL>。
+          # 未配置时 loon/ 更新会被跳过并保留现有文件，bm7/ 仍正常同步。
+          KEELE_PROXY: ${{ secrets.KEELE_PROXY }}
         run: python scripts/sync.py
 
       - name: Commit and push
@@ -46,7 +50,7 @@ jobs:
             echo "::notice::上游无变化，不提交"
             exit 0
           fi
-          LOON=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(d['loon']['total'])")
+          LOON=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(('%d' if d['loon']['updated'] else '%d-skipped') % d['loon']['total'])")
           BM7=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(d['bm7']['total'])")
           PATCH=$(python3 -c "import json;d=json.load(open('sync-status.json'));print(','.join(d['patches']) or 'none')")
           git add -A
@@ -60,12 +64,18 @@ jobs:
             python3 - <<'EOF' >> $GITHUB_STEP_SUMMARY
           import json
           d = json.load(open('sync-status.json'))
-          print('| 数据集 | 文件数 | 失败 |')
-          print('|---|---|---|')
-          print('| loon (kelee) | %d | %d |' % (d['loon']['total'], d['loon']['fail']))
-          print('| bm7 (blackmatrix7) | %d | %d |' % (d['bm7']['total'], d['bm7']['fail']))
+          print('| 数据集 | 文件数 | 失败 | 本次更新 |')
+          print('|---|---|---|---|')
+          print('| loon (kelee) | %d | %d | %s |' % (
+              d['loon']['total'], d['loon']['fail'],
+              '是' if d['loon'].get('updated') else '**否 — 源站拒绝（见下）**'))
+          print('| bm7 (blackmatrix7) | %d | %d | 是 |' % (d['bm7']['total'], d['bm7']['fail']))
           print('')
           print('补丁：`%s`  ·  同步于 %s' % (', '.join(d['patches']) or 'none', d['synced_at']))
+          if not d['loon'].get('updated'):
+              print('')
+              print('> `rule.kelee.one` 对 GitHub Actions 出口 IP 返回 403（Cloudflare 拦截数据中心 IP）。')
+              print('> `loon/` 保持上次内容不变。要恢复自动更新，配置仓库 secret `KEELE_PROXY` 指向一个反代理。')
           EOF
           else
             echo "sync-status.json 未生成，本次同步失败" >> $GITHUB_STEP_SUMMARY

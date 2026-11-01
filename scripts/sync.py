@@ -171,17 +171,26 @@ def main():
     text = body.decode('utf-8', 'replace')
     urls = sorted({m.group(1) for m in re.finditer(r'rules=(https?://\S+\.lsr)', text)})
     print('索引内 Loon 规则: %d' % len(urls))
-    jobs = [(u.rsplit('/', 1)[-1], u) for u in urls]
+    # kelee 的 Cloudflare 会 403 GitHub Actions 出口 IP。设置 KEELE_PROXY 后
+    # 所有 kelee 请求改写为 <proxy>/<原始 URL>，可用自建 Worker 之类反代绕过。
+    proxy = os.environ.get('KEELE_PROXY', '').rstrip('/')
+
+    def via(u):
+        return '%s/%s' % (proxy, u) if proxy else u
+
+    jobs = [(u.rsplit('/', 1)[-1], via(u)) for u in urls]
     # EXTRA 优先：索引里的 TikTok.lsr 是 35 条的纯 TikTok 版，而 Tool/Loon/Lsr 的
     # 80 条版覆盖面更全（含字节 CDN），主配置一直用后者，同名时必须让 EXTRA 覆盖索引
     for u in EXTRA:
         n = u.rsplit('/', 1)[-1]
         jobs = [j for j in jobs if j[0] != n]
-        jobs.append((n, u))
+        jobs.append((n, via(u)))
     loon, loon_fail = fetch_many(jobs, 'loon')
-    if len(loon) < len(jobs) * MIN_SUCCESS:
-        print('loon 成功率过低（%d/%d），放弃本次同步' % (len(loon), len(jobs)))
-        return 1
+    # kelee 的 Cloudflare 会 403 掉 GitHub Actions 的出口 IP。这里不因 loon 失败
+    # 而放弃整次同步：loon/ 保留现有文件，bm7/ 仍照常更新（见 workflow 注释）。
+    loon_ok = len(loon) >= len(jobs) * MIN_SUCCESS
+    if not loon_ok:
+        print('loon 成功率过低（%d/%d），跳过 loon/ 更新，保留现有文件' % (len(loon), len(jobs)))
 
     # ---- 2. bm7/ from blackmatrix7 ----
     print('读取 blackmatrix7 文件树...')
@@ -217,33 +226,40 @@ def main():
         return 1
 
     # ---- 3. 补丁 ----
-    files = {'loon/' + k: v for k, v in loon.items()}
+    files = {}
+    if loon_ok:
+        files.update({'loon/' + k: v for k, v in loon.items()})
     files.update({'bm7/' + k: v for k, v in bm7.items()})
     changed = apply_patches(files)
     print('补丁应用: %s' % (', '.join(changed) if changed else '无变化'))
 
     # ---- 4. 落盘 ----
-    loon_files = {k[5:]: v for k, v in files.items() if k.startswith('loon/')}
     bm7_files = {k[4:]: v for k, v in files.items() if k.startswith('bm7/')}
-    del_loon = write_tree('loon', loon_files)
     del_bm7 = write_tree('bm7', bm7_files)
-    print('写入 loon %d 个（删除 %d）, bm7 %d 个（删除 %d）'
-          % (len(loon_files), del_loon, len(bm7_files), del_bm7))
+    print('写入 bm7 %d 个（删除 %d）' % (len(bm7_files), del_bm7))
+
+    if loon_ok:
+        loon_files = {k[5:]: v for k, v in files.items() if k.startswith('loon/')}
+        del_loon = write_tree('loon', loon_files)
+        print('写入 loon %d 个（删除 %d）' % (len(loon_files), del_loon))
+    else:
+        loon_files = {f: None for f in os.listdir(os.path.join(ROOT, 'loon'))} \
+            if os.path.isdir(os.path.join(ROOT, 'loon')) else {}
 
     summary = {
         'synced_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
-        'loon': {'total': len(loon_files), 'index': len(urls), 'extra': len(EXTRA), 'fail': len(loon_fail)},
-        'bm7': {'total': len(bm7_files), 'fail': len(bm_fail)},
+        'loon': {'total': len(loon_files), 'index': len(urls), 'extra': len(EXTRA),
+                 'fail': len(loon_fail), 'updated': loon_ok},
+        'bm7': {'total': len(bm7_files), 'fail': len(bm_fail), 'updated': True},
         'patches': changed,
     }
     with open(os.path.join(ROOT, 'sync-status.json'), 'w', encoding='utf-8') as f:
         json.dump(summary, f, ensure_ascii=False, indent=1)
     print(json.dumps(summary, ensure_ascii=False))
 
-    # 输出给 workflow 用
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
-            f.write('changed=%s\n' % ('true' if (len(loon_fail) == 0 and len(bm_fail) == 0) else 'false'))
+            f.write('loon_updated=%s\n' % ('true' if loon_ok else 'false'))
     return 0
 
 
